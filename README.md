@@ -1,2 +1,2 @@
 # atcoder-go
-- AtCoder の問題を Go で解いてみた
+- AtCoder の問題を Go で解いてみた :)
