@@ -12,7 +12,7 @@ func main() {
 		if now == n {
 			break
 		} else if now > n {
-			now = 2 * n - now
+			now = 2*n - now
 		}
 	}
 	fmt.Println(now)
