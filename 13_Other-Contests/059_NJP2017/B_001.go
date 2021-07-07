@@ -8,7 +8,7 @@ type pair struct {
 
 func main() {
 	var h, w, n int64
-	fmt.Scan(&h, &x, &n)
+	fmt.Scan(&h, &w, &n)
 
 	s := make(map[pair]struct{})
 	t := make(map[pair]struct{})
