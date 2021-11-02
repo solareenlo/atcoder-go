@@ -1,50 +1,49 @@
 package main
 
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"os"
+)
 
 func main() {
+	in := bufio.NewReader(os.Stdin)
+	out := bufio.NewWriter(os.Stdout)
+	defer out.Flush()
+
 	var n, m, k int
-	fmt.Scan(&n, &m, &k)
+	fmt.Fscan(in, &n, &m, &k)
 
 	res := make([]int, n)
 	uf := New(n)
 	for i := 0; i < m; i++ {
 		var a, b int
-		fmt.Scan(&a, &b)
+		fmt.Fscan(in, &a, &b)
 		a--
 		b--
 		uf.Merge(a, b)
-		// res[a]--
-		// res[b]--
-		res[a]++
-		res[b]++
+		res[a]--
+		res[b]--
 	}
 
 	for i := 0; i < k; i++ {
 		var c, d int
-		fmt.Scan(&c, &d)
+		fmt.Fscan(in, &c, &d)
 		c--
 		d--
 		if uf.Same(c, d) {
-			// res[c]--
-			// res[d]--
-			res[c]++
-			res[d]++
+			res[c]--
+			res[d]--
 		}
 	}
 
 	for i := 0; i < n; i++ {
-		fmt.Print(uf.size[i])
-	}
-	fmt.Println()
-
-	for i := 0; i < n; i++ {
-		fmt.Print(res[i] + uf.size[i] - 1)
+		fmt.Fprint(out, res[i]+uf.Size(i)-1)
 		if i != n-1 {
-			fmt.Printf(" ")
+			fmt.Fprintf(out, " ")
 		}
 	}
-	fmt.Println()
+	fmt.Fprintln(out, "")
 }
 
 type UnionFind struct {
