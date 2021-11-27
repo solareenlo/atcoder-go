@@ -10,7 +10,7 @@ func main() {
 
 	res := 0
 	for i := 0; i < n; i++ {
-		var t, l, r int
+		var t int
 		fmt.Scan(&t, &l[i], &r[i])
 		l[i] *= 2
 		r[i] *= 2
