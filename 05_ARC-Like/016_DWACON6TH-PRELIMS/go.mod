@@ -1,0 +1,3 @@
+module DWACON6TH-PRELIMS
+
+go 1.17
