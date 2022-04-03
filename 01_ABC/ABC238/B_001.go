@@ -19,6 +19,7 @@ func main() {
 		a[i] = (a[i] + a[i-1]) % 360
 	}
 	sort.Ints(a)
+	a = append(a, 0)
 
 	maxi := a[1]
 	a[n+1] = 360
