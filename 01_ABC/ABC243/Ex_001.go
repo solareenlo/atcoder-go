@@ -1,8 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 	"sort"
+	"strings"
 )
 
 const MOD = 998244353
@@ -117,11 +120,15 @@ func bfs(S int) {
 }
 
 func main() {
-	fmt.Scan(&n, &m)
+	in := bufio.NewReader(os.Stdin)
+
+	fmt.Fscan(in, &n, &m)
+	a[0] = strings.Repeat(" ", m+2)
 	for i := 1; i <= n; i++ {
-		fmt.Scan(&a[i])
-		a[i] = " " + a[i]
+		fmt.Fscan(in, &a[i])
+		a[i] = " " + a[i] + " "
 	}
+	a[n+1] = strings.Repeat(" ", m+2)
 	for i := 1; i <= n; i++ {
 		for j := 1; j <= m; j++ {
 			if a[i][j] == 'S' {
@@ -139,7 +146,7 @@ func main() {
 		tX = n - tX + 1
 		tmp := a[1 : n+1]
 		tmp = reverseOrderString(tmp)
-		for i := range tmp {
+		for i := 0; i < n; i++ {
 			a[i+1] = tmp[i]
 		}
 	}
@@ -147,7 +154,7 @@ func main() {
 		sY = m - sY + 1
 		tY = m - tY + 1
 		for i := 1; i <= n; i++ {
-			reverse(a[i]+1, a[i]+m+1)
+			a[i] = " " + reverseString(a[i][1:m+1]) + " "
 		}
 	}
 	for i := 1; i <= n; i++ {
@@ -208,6 +215,7 @@ func main() {
 		st[i] = 0
 		tg[i] = 0
 	}
+
 	st[0] = 0
 	for i := 1; i <= n*m*2; i++ {
 		e[i] = uni(e[i])
@@ -223,6 +231,7 @@ func main() {
 			}
 		}
 	}
+
 	ans1, ans2 := INF, 0
 	for i := 1; i <= st[0]; i++ {
 		bfs(st[i])
@@ -244,4 +253,26 @@ func reverseOrderString(a []string) []string {
 		res[i], res[j] = res[j], res[i]
 	}
 	return res
+}
+
+func reverseString(s string) string {
+	res := []rune(s)
+	for i, j := 0, len(res)-1; i < j; i, j = i+1, j-1 {
+		res[i], res[j] = res[j], res[i]
+	}
+	return string(res)
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+
+func abs(a int) int {
+	if a < 0 {
+		return -a
+	}
+	return a
 }
