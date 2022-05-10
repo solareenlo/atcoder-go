@@ -1,10 +1,17 @@
 package main
 
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"os"
+)
 
-type data struct{ key, id int }
+type data struct {
+	key uint
+	id  int
+}
 
-const mask = 65535
+var mask uint = 65535
 
 var (
 	y = [100001]data{}
@@ -15,18 +22,18 @@ func radix_sort(n int, x []data) {
 	l := make([]int, 1<<16)
 	m := make([]int, 1<<16)
 	for j, k := 0, 0; j < 4; j, k = j+1, k+16 {
-		for i := 0; i <= mask; i++ {
+		for i := 0; i <= int(mask); i++ {
 			m[i] = 0
 		}
 		for i := 0; i < n; i++ {
-			z[i] = (x[i].key >> k) & mask
+			z[i] = int((x[i].key >> k) & mask)
 			m[z[i]]++
 		}
 		if m[0] == n {
 			break
 		}
 		l[0] = 0
-		for i := 0; i < mask; i++ {
+		for i := 0; i < int(mask); i++ {
 			l[i+1] = l[i] + m[i]
 		}
 		for i := 0; i < n; i++ {
@@ -39,22 +46,22 @@ func radix_sort(n int, x []data) {
 	}
 }
 
-func encode(S string, id int) int {
+func encode(S string, id int) uint {
 	var i int
-	ans := 0
-	for i := range S {
-		ans = (ans << 5) + int(S[i]-'a') + 1
+	ans := uint(0)
+	for i = range S {
+		ans = (ans << 5) + uint(S[i]-'a') + 1
 	}
 	for ; i < 5; i++ {
 		ans <<= 5
 	}
-	return (ans << 20) + id
+	return (ans << 20) + uint(id)
 }
 
 type list struct {
 	id    int
 	size  int
-	val   int
+	val   uint
 	child [2]*list
 	par   *list
 }
@@ -92,13 +99,17 @@ func delete_node(p *list) {
 }
 
 func search(root *list, k int) *list {
-	l := root.child[0].size
+	var l int
 	if root.child[0] == nil {
 		l = 0
+	} else {
+		l = root.child[0].size
 	}
-	r := root.child[1].size
+	var r int
 	if root.child[1] == nil {
 		r = 0
+	} else {
+		r = root.child[1].size
 	}
 	if l == k-1 && l+r < root.size {
 		return root
@@ -113,18 +124,20 @@ func search(root *list, k int) *list {
 	}
 }
 
-const THR = 5000
-
 var bit = [21]int{1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576}
 
 func main() {
+	in := bufio.NewReader(os.Stdin)
+	out := bufio.NewWriter(os.Stdout)
+	defer out.Flush()
+
 	var N, Q int
-	fmt.Scan(&N, &Q)
+	fmt.Fscan(in, &N, &Q)
 
 	S := make([]string, N+1)
 	d := make([]data, N+1)
 	for i := 1; i <= N; i++ {
-		fmt.Scan(&S[i])
+		fmt.Fscan(in, &S[i])
 		d[i-1].key = encode(S[i], i)
 		d[i-1].id = i
 	}
@@ -133,9 +146,9 @@ func main() {
 		var j int
 		var T string
 		for i := 1; i <= Q; i++ {
-			fmt.Scan(&j, &T)
+			fmt.Fscan(in, &j, &T)
 		}
-		fmt.Println(T)
+		fmt.Fprintln(out, T)
 		return
 	}
 
@@ -154,7 +167,7 @@ func main() {
 	ld[i].child[0] = nil
 	ld[i].child[1] = nil
 	root := &(ld[i])
-	for k--; k >= 0; k-- {
+	for k = k - 1; k >= 0; k-- {
 		for i = bit[k] - 1; i < N; i += bit[k+1] {
 			ld[i].val = d[i].key
 			ld[i].id = d[i].id
@@ -163,10 +176,10 @@ func main() {
 	}
 	for q := 1; q <= Q; q++ {
 		var T string
-		fmt.Scan(&k, &T)
+		fmt.Fscan(in, &k, &T)
 		p := search(root, k)
-		delete_node(p)
 		i = p.id
+		delete_node(p)
 		S[i] = T
 		ld[N+q].val = encode(S[i], i)
 		ld[N+q].id = i
@@ -174,6 +187,6 @@ func main() {
 	}
 
 	for i := 1; i <= N; i++ {
-		fmt.Print(S[i], " ")
+		fmt.Fprint(out, S[i], " ")
 	}
 }
