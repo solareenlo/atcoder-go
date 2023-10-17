@@ -1,0 +1,3 @@
+module CODE-FESTIVAL-2015-OKINAWA-Open
+
+go 1.20
