@@ -1,0 +1,3 @@
+module CODE-THANKS-FESTIVAL-2017
+
+go 1.20
