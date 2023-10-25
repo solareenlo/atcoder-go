@@ -1,0 +1,3 @@
+module CODE-THANKS-FESTIVAL-2018-Open
+
+go 1.20
