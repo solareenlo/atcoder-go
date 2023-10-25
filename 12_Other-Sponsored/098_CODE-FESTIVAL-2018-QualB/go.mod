@@ -1,0 +1,3 @@
+module CODE-THANKS-FESTIVAL-2018-QualB
+
+go 1.20
